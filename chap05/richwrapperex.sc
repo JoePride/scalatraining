@@ -1,3 +1,5 @@
+import scala.language.postfixOps
+
 println(
   s"""|So in addition to basic math, there are also "rich"
       |versions of basic types. Here are a few that are
