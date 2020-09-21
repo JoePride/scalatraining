@@ -1,4 +1,8 @@
+import scala.annotation.tailrec
+import scala.language.implicitConversions
+
 class Rational(n: Int, d: Int){
+  @tailrec
   private def gcf(a: Int, b: Int): Int = {
     val larger = a.abs max b.abs
     val smaller = a.abs min b.abs
