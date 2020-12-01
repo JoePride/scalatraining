@@ -10,7 +10,7 @@ println(
 
 val filesHere = (new java.io.File(".")).listFiles
 
-for (file <- filesHere if file.getName.endsWith(".sc"))
+for (file <- filesHere if file.getName.endsWith(".mozilla"))
   println(file)
 
 println(
@@ -40,5 +40,60 @@ println(
 for (
   file <- filesHere
   if file.isFile
-  if file.getName.endsWith(".sc")
+  if file.getName.endsWith(".pid")
 ) println(file)
+
+println(
+  """Now, nested loops in a single for statement:
+    |
+    |def fileLines(file: java.io.File) =
+    |  scala.io.Source.fromFile(file).getLines().toList
+    |
+    |def grep(pattern: String) =
+    |  for (
+    |    file <- filesHere
+    |    if (file.getName.endsWith(".scala");
+    |    line <- fileLines(file)
+    |    if line.trim.matches(pattern)
+    |  ) println(file + ": " + line.trim)
+    |
+    |grep(".*gcd.*")
+    |""".stripMargin)
+
+def fileLines(file: java.io.File) = {
+  val fileLinesSource = scala.io.Source.fromFile(file)
+  val fileLinesResult = fileLinesSource.getLines().toList
+  fileLinesSource.close()
+  fileLinesResult
+}
+
+def grep(pattern: String): Unit =
+  for {
+    file <- filesHere
+    if file.getName.endsWith(".bash_profile")
+    line <- fileLines(file)
+    trimmed = line.trim
+    if trimmed.matches(pattern)
+  } println(file + ": " + trimmed)
+
+//grep(".*gcd.*")
+grep(".*bash.*")
+
+println(
+  """Now, producing a new collection:
+    |
+    |def scalaFiles =
+    |  for {
+    |    file <- filesHere
+    |    if file.getName.endsWith(".bash_profile")
+    |  } yield file
+    |
+    |for (file <- scalaFiles) println(file.getName)""".stripMargin)
+
+def scalaFiles =
+  for {
+    file <- filesHere
+    if file.getName.endsWith(".bash_profile")
+  } yield file
+
+for (file <- scalaFiles) println(file.getName)
